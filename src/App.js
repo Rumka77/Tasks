@@ -1,24 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import games from './games';
+//import classNames from './classnames';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div class="App">
+      <div class="App-header">
+        Tic Tac Toe
+      </div>
+      <form id="App-container">
+        <label>
+          <input type="text" class="App-input_text" name="userName" /> <hr />
+        </label>
+        <div id="App-games-container">
+          {games.map(game => (
+            <div key={(game.id)} class={(game.statusGame)}>
+              <p> {game.nameUser1} </p> <hr />
+              <p> {game.nameUser2} </p>
+              <p> {game.timer} </p>
+            </div>
+          ))}
+        </div>
+      </form>
+      <button class="App-button"> + </button>
     </div>
   );
 }
