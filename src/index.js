@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App.js';
+import AppMain from './AppMain.js';
 import AppActiveGame from  "./AppActiveGame/AppActiveGame.js";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
 
 var browserHistory = Router.browserHistory;
 
 ReactDOM.render((
   <Router history={browserHistory}>
-    <Route path="/" exact component={App} />
-    <Route path="/AppActiveGame:activeGame" component={AppActiveGame} />
+    <Route exact path="/" component={AppMain} />
+    <Route path="/AppActiveGame/:nameUser/:idGame" component={AppActiveGame} />
   </Router>
 ), document.getElementById('root'));
 
