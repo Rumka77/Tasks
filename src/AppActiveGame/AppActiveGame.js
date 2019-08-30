@@ -56,13 +56,11 @@ class AppActiveGame extends React.Component {
           if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
             game.statusUser1 = 2;
             game.statusGame  = "AppMain-over-game";
-            game.timer       = this.state.valueTimer;
             clearInterval(this.timerId);
           }
           else {
             if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
               game.statusGame  = "AppMain-over-game";
-              game.timer       = this.state.valueTimer;
               clearInterval(this.timerId);
             }
             else {
@@ -83,13 +81,11 @@ class AppActiveGame extends React.Component {
             if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
               game.statusUser2 = 2;
               game.statusGame  = "AppMain-over-game";
-              game.timer       = this.state.valueTimer;
               clearInterval(this.timerId);
             }
             else {
               if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
                 game.statusGame  = "AppMain-over-game";
-                game.timer       = this.state.valueTimer;
                 clearInterval(this.timerId);
               }
               else {
