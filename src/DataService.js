@@ -11,7 +11,7 @@ class  DataService {
   }
 
   static idToDateStr(str) {
-    return parseInt(str.substr(0, 8));
+    return parseInt(str.slice(0, 7));
   }
 
   static dateNowToStr() {
@@ -20,7 +20,7 @@ class  DataService {
                      this.dateFormatted( String( (new Date()).getFullYear() ) ) );
   }
 
-  static timeSec() {
+  static timeNowSec() {
     return ( (new Date()).getHours() )*60*60 +
            ( (new Date()).getMinutes() )*60 +
              (new Date()).getSeconds();

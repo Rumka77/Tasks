@@ -25,6 +25,7 @@ class AppMain extends React.Component{
     if (this.nameUser.value.split(" ").join("") > "") {
       this.name = this.nameUser.value;
       let newID = DataService.dateNowToStr();
+      console.dir(newID);
       let newGame = {
         id          : newID,
         statusGame  : "AppMain-create-game",
@@ -79,26 +80,21 @@ class AppMain extends React.Component{
     });
   }
 
-  //      let game = this.state.games;
-  //      GamesService.deleteItems(this.game, 0, 1);
-  //      GamesService.saveGames(this.state.games);
-  //      this.setState({games: GamesService.getGames()});
-
   deleteOldGames(games) {
     let oldGames = games.filter(function(game) {
-                                return (DataService.dateNowToStr() > DataService.idToDateStr(game.id)) ||
-                                       (DataService.timeSec() - DataService.idToTimeSec(game.id) > 18000)
+                                  return (DataService.dateNowToStr() != DataService.idToDateStr(game.id)) ||
+                                         (DataService.timeNowSec() - DataService.idToTimeSec(game.id) > 18000)
                                 });
-    if (oldGames.length > 0) {
-      GamesService.deleteItems(oldGames, 0, oldGames.length - 1);
-      GamesService.saveGames(this.state.games);
+//    if (oldGames.length > 0) {
+//      GamesService.deleteItems(oldGames, 0, oldGames.length - 1);
+//      GamesService.saveGames(this.state.games);
 //    console.dir(oldGames);
-    }
+//    }
   };
 
 
   updateScreen() {
-    this.deleteOldGames(this.state.games);
+    //this.deleteOldGames(this.state.games);
     this.setState({games: GamesService.getGames()});
   }
 
