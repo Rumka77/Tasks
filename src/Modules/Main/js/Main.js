@@ -91,20 +91,26 @@ class Main extends React.Component{
   }
 
   deleteOldGames(games) {
-    let oldGames = games.filter(function(game) {
-                                  return (DataService.dateNowToStr() !== DataService.idToDateStr(game.id)) ||
-                                         (DataService.timeNowSec() - DataService.idToTimeSec(game.id) > 18000)
-                                });
-//    if (oldGames.length > 0) {
-//      GamesService.deleteItems(oldGames, 0, oldGames.length - 1);
-//      GamesService.saveGames(this.state.games);
-//    console.dir(oldGames);
-//    }
+    let changed = false;
+    for (let i = 0; i < games.length; i++) {
+      if ( (DataService.dateNowToStr() !== DataService.idToDateStr(games[i].id)) ||
+           ((games[i].statusGame === STATUS_GAME_CREATE) &&
+            (DataService.timeNowSec() - DataService.idToTimeSec(games[i].id) > 900)) ) {
+
+        if (!changed) {
+          changed = true;
+        }
+        GamesService.deleteItems(games, i, 1);
+      };
+    };
+    if (changed) {
+      console.dir("Удалено!");
+      GamesService.saveGames(this.state.games);
+    }
   };
 
 
   updateScreen() {
-    //this.deleteOldGames(this.state.games);
     this.setState({games: GamesService.getGames()});
   }
 
@@ -118,12 +124,16 @@ class Main extends React.Component{
 
   render() {
     //localStorage.setItem("games", JSON.stringify(GamesList));
-
+    this.deleteOldGames(this.state.games);
     let games = this.state.games;
-    if (!games) { games = []; }
+    if (!games) {
+      games = [];
+    }
 
     let activeGame = games.find(game => game.id === this.state.active);
-    if (!activeGame) { activeGame = {}; }
+    if (!activeGame) {
+      activeGame = {};
+    }
 
     const {redirect} = this.state;
     if (redirect&&this.nameUser.value) {

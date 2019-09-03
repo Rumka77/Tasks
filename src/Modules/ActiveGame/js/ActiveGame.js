@@ -193,13 +193,17 @@ class ActiveGame extends React.Component {
 
   render() {
     let games = this.state.games;
-    if (!games) { games = []; }
+    if (!games) {
+      games = [];
+    }
 
     let nameUser     = this.state.nameUser;
     let idChooseGame = this.state.idGame;
     let chooseGame   = games.filter(function(game) {
                                     return game.id === idChooseGame});
-    if (!chooseGame) { chooseGame = {}; };
+    if (!chooseGame) {
+      chooseGame = {};
+    };
 
     const {redirect} = this.state;
     if (redirect) {

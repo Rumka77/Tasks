@@ -1,10 +1,10 @@
 import React from 'react';
-import '../../../Modules/Main/css/Main.css'
+import '../css/Header.css'
 
 class Header extends React.Component{
   render() {
     return (
-      <div className="Main-header">
+      <div className="Header">
         Tic Tac Toe
       </div>
     );
