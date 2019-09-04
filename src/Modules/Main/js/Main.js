@@ -15,6 +15,8 @@ const STATUS_USER_WINNER  = 2;
 const STATUS_GAME_CREATE  = "Create-game";
 const STATUS_GAME_START   = "Start-game";
 
+const DRAW_MARK = String.fromCharCode(10003);
+
 class Main extends React.Component{
 
   constructor(props) {
@@ -55,8 +57,8 @@ class Main extends React.Component{
   }
 
   namePlayer(numUser, statusUser) {
-    if ( ((numUser === 1)&&(statusUser === STATUS_USER_WINNER)) ||
-         ((numUser === 2)&&(statusUser === STATUS_USER_WINNER)) ) {
+    if ( ((numUser === 1) && (statusUser === STATUS_USER_WINNER)) ||
+         ((numUser === 2) && (statusUser === STATUS_USER_WINNER)) ) {
 
       return "Main-container-winnerUser";
     }
@@ -65,7 +67,7 @@ class Main extends React.Component{
   drawMark(statusUser) {
     let res = "";
     if (statusUser === STATUS_USER_WINNER) {
-      res = String.fromCharCode(10003);
+      res = DRAW_MARK;
     }
     return res;
   }
@@ -104,11 +106,9 @@ class Main extends React.Component{
       };
     };
     if (changed) {
-      console.dir("Удалено!");
       GamesService.saveGames(this.state.games);
     }
   };
-
 
   updateScreen() {
     this.setState({games: GamesService.getGames()});
@@ -169,18 +169,14 @@ class Main extends React.Component{
                   </div>
                 </div>
 
-                <div>
+                <div id="Main-timer-game">
+                  <span>{DataService.dateFormatted(Math.round(game.timer/60/60))} : </span>
+                  <span>{DataService.dateFormatted(Math.round(game.timer/60))} : </span>
+                  <span>{DataService.dateFormatted(game.timer%60)} </span>
                 </div>
-
-              <div id="Main-timer-game">
-                <span>{DataService.dateFormatted(Math.round(game.timer/60/60))} : </span>
-                <span>{DataService.dateFormatted(Math.round(game.timer/60))} : </span>
-                <span>{DataService.dateFormatted(game.timer%60)} </span>
-              </div>
               </div>
             ))}
           </div>
-
         </form>
 
         <button className="Main-button" onClick={this.addNewGame.bind(this)}> + </button>

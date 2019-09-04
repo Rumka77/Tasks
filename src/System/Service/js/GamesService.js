@@ -10,7 +10,6 @@ class GamesService {
 
   static deleteItems(mass, index, delCount) {
     mass.splice(index, delCount);
-//    console.dir(index+" "+delCount+" "+mass[index]);
   }
 
 }

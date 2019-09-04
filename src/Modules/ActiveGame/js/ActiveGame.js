@@ -33,7 +33,6 @@ class ActiveGame extends React.Component {
 
   incrementTimerGame() {
     this.setState({valueTimer: this.state.valueTimer + 1});
-    //this.setState({games: GamesService.getGames()});
   }
 
   setCell(game, i, j) {
@@ -124,23 +123,38 @@ class ActiveGame extends React.Component {
     }
   }
 
-  namePlayer(numUser, statusUser) {
-    if ( (numUser === 1)&&(statusUser === STATUS_USER_WAITING) ) {
-      return "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
+  namePlayer(numUser, statusUser, game) {
+    let res = "";
+    if ( (numUser === 1) && (statusUser === STATUS_USER_WAITING) ) {
+      res = "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
     }
     else {
       if (numUser === 1) {
-        return "ActiveGame-container-nameUser1";
+        res = "ActiveGame-container-nameUser1";
       }
       else {
-        if (statusUser === STATUS_USER_WINNER) {
-          return "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
+        if (statusUser === STATUS_USER_WAITING) {
+          res = "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
         }
         else {
-          return "ActiveGame-container-nameUser2";
+          res = "ActiveGame-container-nameUser2";
         }
       }
     }
+    if ( (game.statusGame === STATUS_GAME_OVER) ||
+         ((game.nameUser1 !== this.state.nameUser) && (game.nameUser2 !== this.state.nameUser))) {
+      res = res + " ActiveGame-viewMode";
+    }
+    return res;
+  }
+
+  cssTimer(game) {
+    let res = "ActiveGame-container-timer";
+    if ( (game.statusGame === STATUS_GAME_OVER) ||
+         ((game.nameUser1 !== this.state.nameUser) && (game.nameUser2 !== this.state.nameUser))) {
+      res = res + " ActiveGame-viewMode";
+    }
+    return res;
   }
 
   showTimer(game) {
@@ -220,8 +234,8 @@ class ActiveGame extends React.Component {
           {chooseGame.map(game => (
             <div key={(game.id)}>
               <label id="ActiveGame-container-nameUser">
-                <p className={this.namePlayer(1, game.statusUser1)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
-                <p className={this.namePlayer(2, game.statusUser2)}> <img src={ZeroImg} width="15" height="15" /> {game.nameUser2} </p>
+                <p className={this.namePlayer(1, game.statusUser1, game)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
+                <p className={this.namePlayer(2, game.statusUser2, game)}> <img src={ZeroImg} width="15" height="15" /> {game.nameUser2} </p>
               </label>
 
               <div>
@@ -251,7 +265,7 @@ class ActiveGame extends React.Component {
                 </div>
               </div>
 
-              <div id="ActiveGame-container-timer">
+              <div className={this.cssTimer(game)}>
                 {this.showTimer(game)}
               </div>
 

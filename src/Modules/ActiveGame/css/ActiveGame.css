@@ -6,21 +6,6 @@
   display : block;
 }
 
-.ActiveGame-header {
-  background-color : #282c34;
-  box-shadow       : 0 4px 2px 0px #D0D0D0;
-  display          : flex;
-  flex-direction   : column;
-  align-items      : left;
-  justify-content  : center;
-  font-size        : calc(10px + 2vmin);
-  text-align       : left;
-  left             : 10px;
-  padding          : 10px;
-  padding-left     : 24px;
-  color            : white;
-}
-
 .ActiveGame-link {
   color : #61dafb;
 }
@@ -88,7 +73,7 @@
   height              : 120px;
 }
 
-#ActiveGame-container-timer {
+.ActiveGame-container-timer {
   color      : #202020;
   font-size  : 20px;
   text-align : center;
@@ -108,4 +93,9 @@
   text-align    : center;
   padding-left  : 30px;
   padding-right : 30px;
+}
+
+.ActiveGame-viewMode {
+  color               : #808080;
+  border-bottom-color : #808080;
 }
