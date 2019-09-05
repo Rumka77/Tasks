@@ -48,29 +48,33 @@
 }
 
 .ActiveGame-field {
-  border : 2px solid #FF9900;
-  width  : 120px;
-  height : 120px;
+  background-repeat   : no-repeat;
+  background-size     : auto;
+  background-position : center;
+  border              : 2px solid #FF9900;
+  width               : 120px;
+  height              : 120px;
+}
+
+.ActiveGame-field-view {
+  background-repeat   : no-repeat;
+  background-size     : auto;
+  background-position : center;
+  border              : 2px solid #808080;
+  width               : 120px;
+  height              : 120px;
 }
 
 .ActiveGame-zero-field {
-  background-image    : url("../pict/zero.jpg");
-  background-repeat   : no-repeat;
-  background-size     : auto;
-  background-position : center;
-  border              : 2px solid #FF9900;
-  width               : 120px;
-  height              : 120px;
+  background-image : url("../pict/zero.jpg");
+}
+
+.ActiveGame-zero-view-field {
+  background-image : url("../pict/zero_view.jpg");
 }
 
 .ActiveGame-cross-field {
-  background-image    : url("../pict/cross.jpg");
-  background-repeat   : no-repeat;
-  background-size     : auto;
-  background-position : center;
-  border              : 2px solid #FF9900;
-  width               : 120px;
-  height              : 120px;
+  background-image : url("../pict/cross.jpg");
 }
 
 .ActiveGame-container-timer {

@@ -4,6 +4,7 @@ import GamesService from '../../../System/Service/js/GamesService.js';
 import DataService  from '../../../System/Service/js/DataService.js';
 import LogicGame    from './LogicGame.js';
 import ZeroImg      from '../pict/zero.jpg';
+import ZeroImg_view from '../pict/zero_view.jpg';
 import CrossImg     from '../pict/cross.jpg';
 import Header       from '../../../System/Themes/js/Header.js';
 import { Redirect } from 'react-router-dom';
@@ -16,6 +17,10 @@ const STATUS_GAME_CREATE  = "Create-game";
 const STATUS_GAME_START   = "Start-game";
 const STATUS_GAME_PLAY    = "Play-game";
 const STATUS_GAME_OVER    = "Over-game";
+
+const EMPTY_IN_FIELD      = 0;
+const CROSS_IN_FIELD      = 1;
+const ZERO_IN_FIELD       = 2;
 
 class ActiveGame extends React.Component {
 
@@ -40,10 +45,10 @@ class ActiveGame extends React.Component {
 
       if ((game.nameUser1 === this.state.nameUser) &&
           (game.statusUser1 === STATUS_USER_WAITING) &&
-          (game.fieldsGame[i][j] === 0)) {
+          (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
         game.statusGame       = STATUS_GAME_PLAY;
-        game.fieldsGame[i][j] = 1;
+        game.fieldsGame[i][j] = CROSS_IN_FIELD;
         game.statusUser1      = STATUS_USER_DEFAULT;
         game.statusUser2      = STATUS_USER_WAITING;
 
@@ -57,9 +62,9 @@ class ActiveGame extends React.Component {
 
         if ((game.nameUser1 === this.state.nameUser) &&
             (game.statusUser1 === STATUS_USER_WAITING) &&
-            (game.fieldsGame[i][j] === 0)) {
+            (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
-          game.fieldsGame[i][j] = 1;
+          game.fieldsGame[i][j] = CROSS_IN_FIELD;
 
           if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
             game.statusUser1 = STATUS_USER_WINNER;
@@ -82,9 +87,9 @@ class ActiveGame extends React.Component {
         else {
           if ((game.nameUser2 === this.state.nameUser) &&
               (game.statusUser2 === STATUS_USER_WAITING)&&
-              (game.fieldsGame[i][j] === 0)) {
+              (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
-            game.fieldsGame[i][j] = 2;
+            game.fieldsGame[i][j] = ZERO_IN_FIELD;
 
             if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
               game.statusUser2 = STATUS_USER_WINNER;
@@ -109,21 +114,45 @@ class ActiveGame extends React.Component {
     }
   }
 
-  paintCell(field) {
-    if (field === 0) {
-      return "ActiveGame-field";
+  viewMode(game) {
+    if ( (game.statusGame === STATUS_GAME_OVER) ||
+         ((game.nameUser1 !== this.state.nameUser) &&
+          (game.nameUser2 !== this.state.nameUser)) ) {
+      return true;
     }
     else {
-      if (field === 1) {
-        return "ActiveGame-cross-field";
-      }
-      else {
-        return "ActiveGame-zero-field";
-      }
+      return false;
     }
   }
 
-  namePlayer(numUser, statusUser, game) {
+  paintCell(field, game) {
+    let res = "";
+    if (this.viewMode(game)) {
+      res = res + "ActiveGame-field-view";
+      if (field === CROSS_IN_FIELD) {
+        res = res + " ActiveGame-cross-field";
+      }
+      else {
+        if (field === ZERO_IN_FIELD) {
+          res = res + " ActiveGame-zero-view-field";
+        }
+      }
+    }
+    else {
+      res = res + "ActiveGame-field";
+      if (field === CROSS_IN_FIELD) {
+        res = res + " ActiveGame-cross-field";
+      }
+      else {
+        if (field === ZERO_IN_FIELD) {
+          res = res + " ActiveGame-zero-field";
+        }
+      }
+    }
+    return res;
+  }
+
+  cssNamePlayer(numUser, statusUser, game) {
     let res = "";
     if ( (numUser === 1) && (statusUser === STATUS_USER_WAITING) ) {
       res = "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
@@ -148,10 +177,18 @@ class ActiveGame extends React.Component {
     return res;
   }
 
+  namePlayer(game) {
+    if (this.viewMode(game)) {
+      return ZeroImg_view;
+    }
+    else {
+      return ZeroImg;
+    }
+  }
+
   cssTimer(game) {
     let res = "ActiveGame-container-timer";
-    if ( (game.statusGame === STATUS_GAME_OVER) ||
-         ((game.nameUser1 !== this.state.nameUser) && (game.nameUser2 !== this.state.nameUser))) {
+    if (this.viewMode(game)) {
       res = res + " ActiveGame-viewMode";
     }
     return res;
@@ -234,33 +271,33 @@ class ActiveGame extends React.Component {
           {chooseGame.map(game => (
             <div key={(game.id)}>
               <label id="ActiveGame-container-nameUser">
-                <p className={this.namePlayer(1, game.statusUser1, game)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
-                <p className={this.namePlayer(2, game.statusUser2, game)}> <img src={ZeroImg} width="15" height="15" /> {game.nameUser2} </p>
+                <p className={this.cssNamePlayer(1, game.statusUser1, game)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
+                <p className={this.cssNamePlayer(2, game.statusUser2, game)}> <img src={this.namePlayer(game)} width="15" height="15" /> {game.nameUser2} </p>
               </label>
 
               <div>
                 <div id="ActiveGame-fields-container">
-                  <div className={this.paintCell(game.fieldsGame[0][0])} onClick={this.setCell.bind(this, game, 0, 0)}>
+                  <div className={this.paintCell(game.fieldsGame[0][0], game)} onClick={this.setCell.bind(this, game, 0, 0)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[0][1])} onClick={this.setCell.bind(this, game, 0, 1)}>
+                  <div className={this.paintCell(game.fieldsGame[0][1], game)} onClick={this.setCell.bind(this, game, 0, 1)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[0][2])} onClick={this.setCell.bind(this, game, 0, 2)}>
-                  </div>
-                </div>
-                <div id="ActiveGame-fields-container">
-                  <div className={this.paintCell(game.fieldsGame[1][0])} onClick={this.setCell.bind(this, game, 1, 0)}>
-                  </div>
-                  <div className={this.paintCell(game.fieldsGame[1][1])} onClick={this.setCell.bind(this, game, 1, 1)}>
-                  </div>
-                  <div className={this.paintCell(game.fieldsGame[1][2])} onClick={this.setCell.bind(this, game, 1, 2)}>
+                  <div className={this.paintCell(game.fieldsGame[0][2], game)} onClick={this.setCell.bind(this, game, 0, 2)}>
                   </div>
                 </div>
                 <div id="ActiveGame-fields-container">
-                  <div className={this.paintCell(game.fieldsGame[2][0])} onClick={this.setCell.bind(this, game, 2, 0)}>
+                  <div className={this.paintCell(game.fieldsGame[1][0], game)} onClick={this.setCell.bind(this, game, 1, 0)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[2][1])} onClick={this.setCell.bind(this, game, 2, 1)}>
+                  <div className={this.paintCell(game.fieldsGame[1][1], game)} onClick={this.setCell.bind(this, game, 1, 1)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[2][2])} onClick={this.setCell.bind(this, game, 2, 2)}>
+                  <div className={this.paintCell(game.fieldsGame[1][2], game)} onClick={this.setCell.bind(this, game, 1, 2)}>
+                  </div>
+                </div>
+                <div id="ActiveGame-fields-container">
+                  <div className={this.paintCell(game.fieldsGame[2][0], game)} onClick={this.setCell.bind(this, game, 2, 0)}>
+                  </div>
+                  <div className={this.paintCell(game.fieldsGame[2][1], game)} onClick={this.setCell.bind(this, game, 2, 1)}>
+                  </div>
+                  <div className={this.paintCell(game.fieldsGame[2][2], game)} onClick={this.setCell.bind(this, game, 2, 2)}>
                   </div>
                 </div>
               </div>
