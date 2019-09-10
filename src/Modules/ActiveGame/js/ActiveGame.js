@@ -3,6 +3,7 @@ import '../css/ActiveGame.css';
 import GamesService from '../../../System/Service/js/GamesService.js';
 import DataService  from '../../../System/Service/js/DataService.js';
 import LogicGame    from './LogicGame.js';
+import DrawGame     from './DrawGame.js';
 import ZeroImg      from '../pict/zero.jpg';
 import ZeroImg_view from '../pict/zero_view.jpg';
 import CrossImg     from '../pict/cross.jpg';
@@ -27,17 +28,22 @@ class ActiveGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      games       : GamesService.getGames(),
-      chooseGame  : [],
-      redirect    : false,
-      nameUser    : this.props.match.params.nameUser,
-      idGame      : this.props.match.params.idGame,
-      valueTimer  : 0,
+      games            : GamesService.getGames(),
+      chooseGame       : [],
+      redirect         : false,
+      nameUser         : this.props.match.params.nameUser,
+      idGame           : this.props.match.params.idGame,
+      statusActiveGame : this.props.match.params.statusActiveGame,
+      startTimer       : false,
+      valueTimer       : 0,
     };
   }
 
   incrementTimerGame() {
-    this.setState({valueTimer: this.state.valueTimer + 1});
+    this.setState({
+      valueTimer : this.state.valueTimer + 1,
+      games      : GamesService.getGames(),
+    });
   }
 
   setCell(game, i, j) {
@@ -54,6 +60,7 @@ class ActiveGame extends React.Component {
 
         GamesService.saveGames(this.state.games);
 
+        clearInterval(this.screenId);
         this.timerId = setInterval( () => this.incrementTimerGame(), 1000 );
       }
     }
@@ -65,24 +72,30 @@ class ActiveGame extends React.Component {
             (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
           game.fieldsGame[i][j] = CROSS_IN_FIELD;
+          GamesService.saveGames(this.state.games);
 
           if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
             game.statusUser1 = STATUS_USER_WINNER;
             game.statusGame  = STATUS_GAME_OVER;
+            game.timer       = this.state.valueTimer;
+            GamesService.saveGames(this.state.games);
             clearInterval(this.timerId);
+            this.updateScreen();
           }
           else {
             if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
               game.statusGame  = STATUS_GAME_OVER;
+              game.timer       = this.state.valueTimer;
+              GamesService.saveGames(this.state.games);
               clearInterval(this.timerId);
+              this.updateScreen();
             }
             else {
               game.statusUser1 = STATUS_USER_DEFAULT;
               game.statusUser2 = STATUS_USER_WAITING;
+              GamesService.saveGames(this.state.games);
             }
           }
-
-          GamesService.saveGames(this.state.games);
         }
         else {
           if ((game.nameUser2 === this.state.nameUser) &&
@@ -94,12 +107,12 @@ class ActiveGame extends React.Component {
             if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
               game.statusUser2 = STATUS_USER_WINNER;
               game.statusGame  = STATUS_GAME_OVER;
-              clearInterval(this.timerId);
+              clearInterval(this.updateScreen);
             }
             else {
               if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
                 game.statusGame  = STATUS_GAME_OVER;
-                clearInterval(this.timerId);
+                clearInterval(this.updateScreen);
               }
               else {
                 game.statusUser1 = STATUS_USER_WAITING;
@@ -112,86 +125,6 @@ class ActiveGame extends React.Component {
         }
       }
     }
-  }
-
-  viewMode(game) {
-    if ( (game.statusGame === STATUS_GAME_OVER) ||
-         ((game.nameUser1 !== this.state.nameUser) &&
-          (game.nameUser2 !== this.state.nameUser)) ) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  paintCell(field, game) {
-    let res = "";
-    if (this.viewMode(game)) {
-      res = res + "ActiveGame-field-view";
-      if (field === CROSS_IN_FIELD) {
-        res = res + " ActiveGame-cross-field";
-      }
-      else {
-        if (field === ZERO_IN_FIELD) {
-          res = res + " ActiveGame-zero-view-field";
-        }
-      }
-    }
-    else {
-      res = res + "ActiveGame-field";
-      if (field === CROSS_IN_FIELD) {
-        res = res + " ActiveGame-cross-field";
-      }
-      else {
-        if (field === ZERO_IN_FIELD) {
-          res = res + " ActiveGame-zero-field";
-        }
-      }
-    }
-    return res;
-  }
-
-  cssNamePlayer(numUser, statusUser, game) {
-    let res = "";
-    if ( (numUser === 1) && (statusUser === STATUS_USER_WAITING) ) {
-      res = "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
-    }
-    else {
-      if (numUser === 1) {
-        res = "ActiveGame-container-nameUser1";
-      }
-      else {
-        if (statusUser === STATUS_USER_WAITING) {
-          res = "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
-        }
-        else {
-          res = "ActiveGame-container-nameUser2";
-        }
-      }
-    }
-    if ( (game.statusGame === STATUS_GAME_OVER) ||
-         ((game.nameUser1 !== this.state.nameUser) && (game.nameUser2 !== this.state.nameUser))) {
-      res = res + " ActiveGame-viewMode";
-    }
-    return res;
-  }
-
-  namePlayer(game) {
-    if (this.viewMode(game)) {
-      return ZeroImg_view;
-    }
-    else {
-      return ZeroImg;
-    }
-  }
-
-  cssTimer(game) {
-    let res = "ActiveGame-container-timer";
-    if (this.viewMode(game)) {
-      res = res + " ActiveGame-viewMode";
-    }
-    return res;
   }
 
   showTimer(game) {
@@ -209,19 +142,15 @@ class ActiveGame extends React.Component {
     if ( (game.statusGame === STATUS_GAME_PLAY) && (this.state.nameUser === game.nameUser1) ) {
       game.statusUser2 = STATUS_USER_WINNER;
       game.statusGame  = STATUS_GAME_OVER;
-      game.timer       = this.state.valueTimer;
       GamesService.saveGames(this.state.games);
-
       clearInterval(this.timerId);
     }
     else {
       if ( (game.statusGame === STATUS_GAME_PLAY) && (this.state.nameUser === game.nameUser2) ) {
         game.statusUser1 = STATUS_USER_WINNER;
         game.statusGame  = STATUS_GAME_OVER;
-        game.timer       = this.state.valueTimer;
         GamesService.saveGames(this.state.games);
-
-        clearInterval(this.timerId);
+        clearInterval(this.screenId);
       };
     };
 
@@ -231,15 +160,21 @@ class ActiveGame extends React.Component {
   }
 
   updateScreen() {
-    this.setState({games: GamesService.getGames()});
+    this.setState({
+      games: GamesService.getGames(),
+    });
   }
 
   componentDidMount() {
-    this.screenId = setInterval( () => this.updateScreen(), 1000 );
+    if (this.state.statusActiveGame !== STATUS_GAME_OVER) {
+      this.screenId = setInterval( () => this.updateScreen(), 1000 );
+    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.screenId);
+    if (this.state.statusActiveGame !== STATUS_GAME_OVER) {
+      clearInterval(this.screenId);
+    }
   }
 
   render() {
@@ -251,7 +186,8 @@ class ActiveGame extends React.Component {
     let nameUser     = this.state.nameUser;
     let idChooseGame = this.state.idGame;
     let chooseGame   = games.filter(function(game) {
-                                    return game.id === idChooseGame});
+                                      return game.id === idChooseGame;
+                                    });
     if (!chooseGame) {
       chooseGame = {};
     };
@@ -271,38 +207,38 @@ class ActiveGame extends React.Component {
           {chooseGame.map(game => (
             <div key={(game.id)}>
               <label id="ActiveGame-container-nameUser">
-                <p className={this.cssNamePlayer(1, game.statusUser1, game)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
-                <p className={this.cssNamePlayer(2, game.statusUser2, game)}> <img src={this.namePlayer(game)} width="15" height="15" /> {game.nameUser2} </p>
+                <p className={DrawGame.cssNamePlayer(1, game.statusUser1, this.state.nameUser, game)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
+                <p className={DrawGame.cssNamePlayer(2, game.statusUser2, this.state.nameUser, game)}> <img src={DrawGame.namePlayer(game, this.state.nameUser)} width="15" height="15" /> {game.nameUser2} </p>
               </label>
 
               <div>
                 <div id="ActiveGame-fields-container">
-                  <div className={this.paintCell(game.fieldsGame[0][0], game)} onClick={this.setCell.bind(this, game, 0, 0)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[0][0], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 0, 0)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[0][1], game)} onClick={this.setCell.bind(this, game, 0, 1)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[0][1], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 0, 1)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[0][2], game)} onClick={this.setCell.bind(this, game, 0, 2)}>
-                  </div>
-                </div>
-                <div id="ActiveGame-fields-container">
-                  <div className={this.paintCell(game.fieldsGame[1][0], game)} onClick={this.setCell.bind(this, game, 1, 0)}>
-                  </div>
-                  <div className={this.paintCell(game.fieldsGame[1][1], game)} onClick={this.setCell.bind(this, game, 1, 1)}>
-                  </div>
-                  <div className={this.paintCell(game.fieldsGame[1][2], game)} onClick={this.setCell.bind(this, game, 1, 2)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[0][2], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 0, 2)}>
                   </div>
                 </div>
                 <div id="ActiveGame-fields-container">
-                  <div className={this.paintCell(game.fieldsGame[2][0], game)} onClick={this.setCell.bind(this, game, 2, 0)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[1][0], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 1, 0)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[2][1], game)} onClick={this.setCell.bind(this, game, 2, 1)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[1][1], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 1, 1)}>
                   </div>
-                  <div className={this.paintCell(game.fieldsGame[2][2], game)} onClick={this.setCell.bind(this, game, 2, 2)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[1][2], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 1, 2)}>
+                  </div>
+                </div>
+                <div id="ActiveGame-fields-container">
+                  <div className={DrawGame.paintCell(game.fieldsGame[2][0], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 2, 0)}>
+                  </div>
+                  <div className={DrawGame.paintCell(game.fieldsGame[2][1], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 2, 1)}>
+                  </div>
+                  <div className={DrawGame.paintCell(game.fieldsGame[2][2], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 2, 2)}>
                   </div>
                 </div>
               </div>
 
-              <div className={this.cssTimer(game)}>
+              <div className={DrawGame.cssTimer(game, this.state.nameUser)}>
                 {this.showTimer(game)}
               </div>
 

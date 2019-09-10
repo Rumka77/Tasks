@@ -2,7 +2,6 @@ import React from 'react';
 import '../css/Main.css';
 import GamesService  from '../../../System/Service/js/GamesService.js';
 import DataService   from '../../../System/Service/js/DataService.js';
-import GamesList     from  '../../../System/Service/js/GamesList.js';
 import ActiveGame    from  '../../ActiveGame/js/ActiveGame.js';
 import MarkImg       from '../pict/mark.jpg';
 import Header        from '../../../System/Themes/js/Header.js';
@@ -49,7 +48,9 @@ class Main extends React.Component{
 
       this.state.games.push(newGame);
       GamesService.saveGames(this.state.games);
-      this.setState({games: GamesService.getGames()});
+      this.setState({
+        games: GamesService.getGames(),
+      });
     }
     else {
       alert ("Неверное имя пользователя!")
@@ -83,7 +84,9 @@ class Main extends React.Component{
       game.nameUser2   = this.nameUser.value;
 
       GamesService.saveGames(this.state.games);
-      this.setState({games: GamesService.getGames()});
+      this.setState({
+        games: GamesService.getGames(),
+      });
     }
 
     this.setState({
@@ -111,7 +114,9 @@ class Main extends React.Component{
   };
 
   updateScreen() {
-    this.setState({games: GamesService.getGames()});
+    this.setState({
+      games : GamesService.getGames(),
+    });
   }
 
   componentDidMount() {
@@ -123,7 +128,6 @@ class Main extends React.Component{
   }
 
   render() {
-    //localStorage.setItem("games", JSON.stringify(GamesList));
     this.deleteOldGames(this.state.games);
     let games = this.state.games;
     if (!games) {
@@ -137,7 +141,7 @@ class Main extends React.Component{
 
     const {redirect} = this.state;
     if (redirect&&this.nameUser.value) {
-      return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" + activeGame.id} />;
+      return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" + activeGame.id+ "/" + activeGame.statusGame} />;
     }
 
     return (

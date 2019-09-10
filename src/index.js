@@ -11,7 +11,7 @@ var browserHistory = Router.browserHistory;
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route exact path="/" component={Main} />
-    <Route path="/ActiveGame/js/:nameUser/:idGame" component={ActiveGame} />
+    <Route path="/ActiveGame/js/:nameUser/:idGame/:statusActiveGame" component={ActiveGame} />
   </Router>
 ), document.getElementById('root'));
 
