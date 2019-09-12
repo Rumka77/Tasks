@@ -2,19 +2,8 @@ import React from 'react';
 import '../css/Main.css';
 import GamesService  from '../../../System/Service/js/GamesService.js';
 import DataService   from '../../../System/Service/js/DataService.js';
-import ActiveGame    from  '../../ActiveGame/js/ActiveGame.js';
-import MarkImg       from '../pict/mark.jpg';
 import Header        from '../../../System/Themes/js/Header.js';
 import { Redirect }  from 'react-router-dom';
-
-const STATUS_USER_DEFAULT = 0;
-const STATUS_USER_WAITING = 1;
-const STATUS_USER_WINNER  = 2;
-
-const STATUS_GAME_CREATE  = "Create-game";
-const STATUS_GAME_START   = "Start-game";
-
-const DRAW_MARK = String.fromCharCode(10003);
 
 class Main extends React.Component{
 
@@ -66,11 +55,11 @@ class Main extends React.Component{
   }
 
   drawMark(statusUser) {
-    let res = "";
+    let result = "";
     if (statusUser === STATUS_USER_WINNER) {
-      res = DRAW_MARK;
+      result = DRAW_MARK;
     }
-    return res;
+    return result;
   }
 
   setRedirect(game) {
@@ -140,7 +129,7 @@ class Main extends React.Component{
     }
 
     const {redirect} = this.state;
-    if (redirect&&this.nameUser.value) {
+    if (redirect && this.nameUser.value) {
       return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" + activeGame.id+ "/" + activeGame.statusGame} />;
     }
 
@@ -190,3 +179,12 @@ class Main extends React.Component{
 }
 
 export default Main;
+
+const STATUS_USER_DEFAULT = 0;
+const STATUS_USER_WAITING = 1;
+const STATUS_USER_WINNER  = 2;
+
+const STATUS_GAME_CREATE  = "Create-game";
+const STATUS_GAME_START   = "Start-game";
+
+const DRAW_MARK = String.fromCharCode(10003);

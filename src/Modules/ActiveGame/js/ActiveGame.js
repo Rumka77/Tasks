@@ -4,24 +4,9 @@ import GamesService from '../../../System/Service/js/GamesService.js';
 import DataService  from '../../../System/Service/js/DataService.js';
 import LogicGame    from './LogicGame.js';
 import DrawGame     from './DrawGame.js';
-import ZeroImg      from '../pict/zero.jpg';
-import ZeroImg_view from '../pict/zero_view.jpg';
 import CrossImg     from '../pict/cross.jpg';
 import Header       from '../../../System/Themes/js/Header.js';
 import { Redirect } from 'react-router-dom';
-
-const STATUS_USER_DEFAULT = 0;
-const STATUS_USER_WAITING = 1;
-const STATUS_USER_WINNER  = 2;
-
-const STATUS_GAME_CREATE  = "Create-game";
-const STATUS_GAME_START   = "Start-game";
-const STATUS_GAME_PLAY    = "Play-game";
-const STATUS_GAME_OVER    = "Over-game";
-
-const EMPTY_IN_FIELD      = 0;
-const CROSS_IN_FIELD      = 1;
-const ZERO_IN_FIELD       = 2;
 
 class ActiveGame extends React.Component {
 
@@ -46,81 +31,98 @@ class ActiveGame extends React.Component {
     });
   }
 
+  startGame(game, i, j) {
+    game.statusGame       = STATUS_GAME_PLAY;
+    game.fieldsGame[i][j] = CROSS_IN_FIELD;
+    game.statusUser1      = STATUS_USER_DEFAULT;
+    game.statusUser2      = STATUS_USER_WAITING;
+    GamesService.saveGames(this.state.games);
+
+    clearInterval(this.screenId);
+    this.timerId = setInterval( () => this.incrementTimerGame(), 1000 );
+  }
+
+  setCross(game, i, j) {
+    game.fieldsGame[i][j] = CROSS_IN_FIELD;
+    GamesService.saveGames(this.state.games);
+
+    if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
+      game.statusUser1 = STATUS_USER_WINNER;
+      game.statusGame  = STATUS_GAME_OVER;
+      game.timer       = this.state.valueTimer;
+      GamesService.saveGames(this.state.games);
+
+      clearInterval(this.timerId);
+      this.updateScreen();
+    }
+    else {
+      if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
+        game.statusGame  = STATUS_GAME_OVER;
+        game.timer       = this.state.valueTimer;
+        GamesService.saveGames(this.state.games);
+
+        clearInterval(this.timerId);
+        this.updateScreen();
+      }
+      else {
+        game.statusUser1 = STATUS_USER_DEFAULT;
+        game.statusUser2 = STATUS_USER_WAITING;
+        GamesService.saveGames(this.state.games);
+      }
+    }
+  }
+
+  setZero(game, i, j) {
+    game.fieldsGame[i][j] = ZERO_IN_FIELD;
+    GamesService.saveGames(this.state.games);
+
+    if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
+      game.statusUser2 = STATUS_USER_WINNER;
+      game.statusGame  = STATUS_GAME_OVER;
+      GamesService.saveGames(this.state.games);
+
+      clearInterval(this.updateScreen);
+    }
+    else {
+      if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
+        game.statusGame  = STATUS_GAME_OVER;
+        GamesService.saveGames(this.state.games);
+
+        clearInterval(this.updateScreen);
+      }
+      else {
+        game.statusUser1 = STATUS_USER_WAITING;
+        game.statusUser2 = STATUS_USER_DEFAULT;
+        GamesService.saveGames(this.state.games);
+      }
+    }
+  }
+
   setCell(game, i, j) {
     if (game.statusGame === STATUS_GAME_START) {
 
-      if ((game.nameUser1 === this.state.nameUser) &&
+      if ((game.nameUser1 === this.state.nameUser)   &&
           (game.statusUser1 === STATUS_USER_WAITING) &&
           (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
-        game.statusGame       = STATUS_GAME_PLAY;
-        game.fieldsGame[i][j] = CROSS_IN_FIELD;
-        game.statusUser1      = STATUS_USER_DEFAULT;
-        game.statusUser2      = STATUS_USER_WAITING;
-
-        GamesService.saveGames(this.state.games);
-
-        clearInterval(this.screenId);
-        this.timerId = setInterval( () => this.incrementTimerGame(), 1000 );
+        this.startGame(game, i, j);
       }
     }
     else {
       if (game.statusGame === STATUS_GAME_PLAY) {
 
-        if ((game.nameUser1 === this.state.nameUser) &&
+        if ((game.nameUser1 === this.state.nameUser)   &&
             (game.statusUser1 === STATUS_USER_WAITING) &&
             (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
-          game.fieldsGame[i][j] = CROSS_IN_FIELD;
-          GamesService.saveGames(this.state.games);
-
-          if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
-            game.statusUser1 = STATUS_USER_WINNER;
-            game.statusGame  = STATUS_GAME_OVER;
-            game.timer       = this.state.valueTimer;
-            GamesService.saveGames(this.state.games);
-            clearInterval(this.timerId);
-            this.updateScreen();
-          }
-          else {
-            if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
-              game.statusGame  = STATUS_GAME_OVER;
-              game.timer       = this.state.valueTimer;
-              GamesService.saveGames(this.state.games);
-              clearInterval(this.timerId);
-              this.updateScreen();
-            }
-            else {
-              game.statusUser1 = STATUS_USER_DEFAULT;
-              game.statusUser2 = STATUS_USER_WAITING;
-              GamesService.saveGames(this.state.games);
-            }
-          }
+          this.setCross(game, i, j);
         }
         else {
-          if ((game.nameUser2 === this.state.nameUser) &&
-              (game.statusUser2 === STATUS_USER_WAITING)&&
+          if ((game.nameUser2 === this.state.nameUser)   &&
+              (game.statusUser2 === STATUS_USER_WAITING) &&
               (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
-            game.fieldsGame[i][j] = ZERO_IN_FIELD;
-
-            if (LogicGame.checkWinner(game.fieldsGame, i, j)) {
-              game.statusUser2 = STATUS_USER_WINNER;
-              game.statusGame  = STATUS_GAME_OVER;
-              clearInterval(this.updateScreen);
-            }
-            else {
-              if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
-                game.statusGame  = STATUS_GAME_OVER;
-                clearInterval(this.updateScreen);
-              }
-              else {
-                game.statusUser1 = STATUS_USER_WAITING;
-                game.statusUser2 = STATUS_USER_DEFAULT;
-              }
-            }
-
-            GamesService.saveGames(this.state.games);
+            this.setZero(game, i, j);      
           }
         }
       }
@@ -183,7 +185,6 @@ class ActiveGame extends React.Component {
       games = [];
     }
 
-    let nameUser     = this.state.nameUser;
     let idChooseGame = this.state.idGame;
     let chooseGame   = games.filter(function(game) {
                                       return game.id === idChooseGame;
@@ -261,3 +262,16 @@ class ActiveGame extends React.Component {
 }
 
 export default ActiveGame;
+
+const STATUS_USER_DEFAULT = 0;
+const STATUS_USER_WAITING = 1;
+const STATUS_USER_WINNER  = 2;
+
+const STATUS_GAME_CREATE  = "Create-game";
+const STATUS_GAME_START   = "Start-game";
+const STATUS_GAME_PLAY    = "Play-game";
+const STATUS_GAME_OVER    = "Over-game";
+
+const EMPTY_IN_FIELD      = 0;
+const CROSS_IN_FIELD      = 1;
+const ZERO_IN_FIELD       = 2;

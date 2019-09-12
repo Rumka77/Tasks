@@ -1,21 +1,24 @@
 class LogicGame {
 
   static checkEmpty(fieldsGame, x, y) {
-    let res = false;
+    let result = false;
     for (let i = 0; i < fieldsGame[x].length; i++) {
-      let emptyCells = fieldsGame[i].filter(function(field) { return field === 0 });
+      let emptyCells = fieldsGame[i].filter(function(field) {
+                                              return field === 0;
+                                            });
       if (emptyCells.length > 0) {
-        res = true;
+        result = true;
         break;
       }
     }
-    return res;
+    return result;
   }
 
   static checkGorizontal(fieldsGame, x, y) {
     let filledLine = false;
     let filledCells = fieldsGame[x].filter(function(field) {
-                                           return field === fieldsGame[x][y]});
+                                             return field === fieldsGame[x][y];
+                                           });
     if (fieldsGame[x].length === filledCells.length) {
       filledLine = true;
     }
@@ -34,7 +37,8 @@ class LogicGame {
     let filledLine = false;
     let column = this.getColumn(fieldsGame, y);
     let filledCells = column.filter(function(field) {
-                                    return field === fieldsGame[x][y]});
+                                      return field === fieldsGame[x][y];
+                                    });
     if (fieldsGame[x].length === filledCells.length) {
       filledLine = true;
     }
@@ -48,7 +52,8 @@ class LogicGame {
       leftDiagMassiv.push(massiv[i][i]);
     }
     let filledCells = leftDiagMassiv.filter(function(field) {
-                                            return field === massiv[x][y]});
+                                              return field === massiv[x][y];
+                                            });
     if (massiv[x].length === filledCells.length) {
       filledLine = true;
     }
@@ -62,7 +67,8 @@ class LogicGame {
       rightDiagMassiv.push(massiv[i][massiv.length-1-i]);
     }
     let filledCells = rightDiagMassiv.filter(function(field) {
-                                             return field === massiv[x][y]});
+                                               return field === massiv[x][y];
+                                             });
     if (massiv[x].length === filledCells.length) {
       filledLine = true;
     }
@@ -70,29 +76,29 @@ class LogicGame {
   }
 
   static checkWinner(fieldsGame, x, y) {
-    let res = true;
+    let result = true;
     if (this.checkGorizontal(fieldsGame, x, y)) {
-      res = true;
+      result = true;
     }
     else {
       if (this.checkVertical(fieldsGame, x, y)) {
-        res = true;
+        result = true;
       }
       else {
-        if ((x===y) && (this.checkLeftDiagonal(fieldsGame, x, y))) {
-          res = true;
+        if ((x === y) && (this.checkLeftDiagonal(fieldsGame, x, y))) {
+          result = true;
         }
         else {
           if (this.checkRightDiagonal(fieldsGame, x, y)) {
-            res = true;
+            result = true;
           }
           else {
-            res = false;
+            result = false;
           };
         };
       }
     }
-    return(res);
+    return result;
   }
 
 }

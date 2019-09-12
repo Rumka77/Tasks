@@ -1,13 +1,6 @@
 import ZeroImg      from '../pict/zero.jpg';
 import ZeroImg_view from '../pict/zero_view.jpg';
 
-const STATUS_USER_WAITING = 1;
-
-const STATUS_GAME_OVER    = "Over-game";
-
-const CROSS_IN_FIELD      = 1;
-const ZERO_IN_FIELD       = 2;
-
 class DrawGame {
 
   static viewMode(game, nameUser) {
@@ -22,55 +15,55 @@ class DrawGame {
   }
 
   static paintCell(field, game, nameUser) {
-    let res = "";
+    let result = "";
     if (this.viewMode(game, nameUser)) {
-      res = res + "ActiveGame-field-view";
+      result = result + "ActiveGame-field-view";
       if (field === CROSS_IN_FIELD) {
-        res = res + " ActiveGame-cross-field";
+        result = result + " ActiveGame-cross-field";
       }
       else {
         if (field === ZERO_IN_FIELD) {
-          res = res + " ActiveGame-zero-view-field";
+          result = result + " ActiveGame-zero-view-field";
         }
       }
     }
     else {
-      res = res + "ActiveGame-field";
+      result = result + "ActiveGame-field";
       if (field === CROSS_IN_FIELD) {
-        res = res + " ActiveGame-cross-field";
+        result = result + " ActiveGame-cross-field";
       }
       else {
         if (field === ZERO_IN_FIELD) {
-          res = res + " ActiveGame-zero-field";
+          result = result + " ActiveGame-zero-field";
         }
       }
     }
-    return res;
+    return result;
   }
 
   static cssNamePlayer(numUser, statusUser, nameUser, game) {
-    let res = "";
+    let result = "";
     if ( (numUser === 1) && (statusUser === STATUS_USER_WAITING) ) {
-      res = "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
+      result = "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
     }
     else {
       if (numUser === 1) {
-        res = res + "ActiveGame-container-nameUser1";
+        result = result + "ActiveGame-container-nameUser1";
       }
       else {
         if (statusUser === STATUS_USER_WAITING) {
-          res = res + "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
+          result = result + "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
         }
         else {
-          res = res + "ActiveGame-container-nameUser2";
+          result = result + "ActiveGame-container-nameUser2";
         }
       }
     }
     if ( (game.statusGame === STATUS_GAME_OVER) ||
-         ((game.nameUser1 !== nameUser) && (game.nameUser2 !== nameUser))) {
-      res = res + " ActiveGame-viewMode";
+         ((game.nameUser1 !== nameUser) && (game.nameUser2 !== nameUser)) ) {
+      result = result + " ActiveGame-viewMode";
     }
-    return res;
+    return result;
   }
 
   static namePlayer(game, nameUser) {
@@ -83,12 +76,19 @@ class DrawGame {
   }
 
   static cssTimer(game, nameUser) {
-    let res = "ActiveGame-container-timer";
+    let result = "ActiveGame-container-timer";
     if (this.viewMode(game, nameUser)) {
-      res = res + " ActiveGame-viewMode";
+      result = result + " ActiveGame-viewMode";
     }
-    return res;
+    return result;
   }
 
 }
 export default DrawGame;
+
+const STATUS_USER_WAITING = 1;
+
+const STATUS_GAME_OVER    = "Over-game";
+
+const CROSS_IN_FIELD      = 1;
+const ZERO_IN_FIELD       = 2;
