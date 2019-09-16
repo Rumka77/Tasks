@@ -122,7 +122,7 @@ class ActiveGame extends React.Component {
               (game.statusUser2 === STATUS_USER_WAITING) &&
               (game.fieldsGame[i][j] === EMPTY_IN_FIELD)) {
 
-            this.setZero(game, i, j);      
+            this.setZero(game, i, j);
           }
         }
       }
@@ -203,7 +203,7 @@ class ActiveGame extends React.Component {
 
         <Header />
 
-        <form id="ActiveGame-container">
+        <form className="ActiveGame-game" id="ActiveGame-container">
 
           {chooseGame.map(game => (
             <div key={(game.id)}>

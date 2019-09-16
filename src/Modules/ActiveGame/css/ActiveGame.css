@@ -1,5 +1,5 @@
 .ActiveGame {
-  text-align  : center;
+  text-align : center;
 }
 
 .ActiveGame-over {
@@ -10,10 +10,18 @@
   color : #61dafb;
 }
 
+.ActiveGame-game{
+  position   : fixed;
+  overflow-y : auto;
+  top        : 50px;
+  height     : 100%;
+  width      : 90%;
+}
+
 #ActiveGame-container {
   display         : flex;
   flex-direction  : column;
-  justify-content : center;
+  align-items     : center;
   text-align      : center;
   margin-left     : 24px;
   margin-right    : 24px;

@@ -137,10 +137,10 @@ class Main extends React.Component{
       <div className="Main">
         <Header />
 
-        <form id="Main-container">
-          <label>
+        <form className="Main-listGames" id="Main-container">
+          <div className="Main-div-input_text">
             <input type="text" className="Main-input_text" name="nameUser" ref={el=>this.nameUser=el} />
-          </label>
+          </div>
           <div id="Main-games-container">
             {games.map(game => (
               <div key={(game.id)} className={(game.statusGame)} onClick={this.setRedirect.bind(this, game)}>
@@ -172,7 +172,9 @@ class Main extends React.Component{
           </div>
         </form>
 
-        <button className="Main-button" onClick={this.addNewGame.bind(this)}> + </button>
+        <div className="Main-div-button">
+          <button className="Main-button" onClick={this.addNewGame.bind(this)}> + </button>
+        </div>
       </div>
     );
   }

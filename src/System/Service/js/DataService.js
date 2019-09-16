@@ -23,7 +23,8 @@ class  DataService {
   static timeNowToStr() {
     return this.dateFormatted( String( (new Date()).getHours() ) ) +
            this.dateFormatted( String( (new Date()).getMinutes() ) ) +
-           this.dateFormatted( String( (new Date()).getSeconds() ) );
+           this.dateFormatted( String( (new Date()).getSeconds() ) ) +
+           this.dateFormatted( String( (new Date()).getMilliseconds() ) );
   }
 
   static timeNowSec() {
