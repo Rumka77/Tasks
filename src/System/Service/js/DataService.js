@@ -11,7 +11,7 @@ class  DataService {
   }
 
   static idToDateStr(str) {
-    return str.slice(0, 8);
+    return str.substr(0, 8);
   }
 
   static dateNowToStr() {
