@@ -25,12 +25,12 @@ class LogicGame {
     return (filledLine);
   }
 
-  static getColumn(massiv, col) {
-    let colMassiv = [];
-    for (var i = 0; i <= massiv.length-1; i++) {
-      colMassiv.push(massiv[i][col]);
+  static getColumn(array, column) {
+    let columnArray = [];
+    for (var i = 0; i <= array.length-1; i++) {
+      columnArray.push(array[i][column]);
     }
-    return (colMassiv);
+    return (columnArray);
   }
 
   static checkVertical(fieldsGame, x, y) {
@@ -45,31 +45,31 @@ class LogicGame {
     return (filledLine);
   }
 
-  static checkLeftDiagonal(massiv, x, y) {
+  static checkLeftDiagonal(array, x, y) {
     let filledLine = false;
-    let leftDiagMassiv = [];
-    for (var i = 0; i <= massiv.length-1; i++) {
-      leftDiagMassiv.push(massiv[i][i]);
+    let leftDiagonalArray = [];
+    for (var i = 0; i <= array.length-1; i++) {
+      leftDiagonalArray.push(array[i][i]);
     }
-    let filledCells = leftDiagMassiv.filter(function(field) {
-                                              return field === massiv[x][y];
-                                            });
-    if (massiv[x].length === filledCells.length) {
+    let filledCells = leftDiagonalArray.filter(function(field) {
+                                                 return field === array[x][y];
+                                               });
+    if (array[x].length === filledCells.length) {
       filledLine = true;
     }
     return (filledLine);
   }
 
-  static checkRightDiagonal(massiv, x, y) {
+  static checkRightDiagonal(array, x, y) {
     let filledLine = false;
-    let rightDiagMassiv = [];
-    for (var i = 0; i <= massiv.length-1; i++) {
-      rightDiagMassiv.push(massiv[i][massiv.length-1-i]);
+    let rightDiagonalArray = [];
+    for (var i = 0; i <= array.length-1; i++) {
+      rightDiagonalArray.push(array[i][array.length-1-i]);
     }
-    let filledCells = rightDiagMassiv.filter(function(field) {
-                                               return field === massiv[x][y];
-                                             });
-    if (massiv[x].length === filledCells.length) {
+    let filledCells = rightDiagonalArray.filter(function(field) {
+                                                  return field === array[x][y];
+                                                });
+    if (array[x].length === filledCells.length) {
       filledLine = true;
     }
     return (filledLine);

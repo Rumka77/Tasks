@@ -85,7 +85,7 @@ class ActiveGame extends React.Component {
     }
     else {
       if (!LogicGame.checkEmpty(game.fieldsGame, i, j)) {
-        game.statusGame  = STATUS_GAME_OVER;
+        game.statusGame = STATUS_GAME_OVER;
         GamesService.saveGames(this.state.games);
 
         clearInterval(this.updateScreen);
@@ -130,7 +130,8 @@ class ActiveGame extends React.Component {
   }
 
   showTimer(game) {
-    if ((game.nameUser1 === this.state.nameUser) && (game.statusGame === STATUS_GAME_PLAY)) {
+    if ( (game.nameUser1 === this.state.nameUser) &&
+         (game.statusGame === STATUS_GAME_PLAY) ) {
       game.timer = this.state.valueTimer;
       GamesService.saveGames(this.state.games);
     }
@@ -141,14 +142,16 @@ class ActiveGame extends React.Component {
   }
 
   setRedirect(game) {
-    if ( (game.statusGame === STATUS_GAME_PLAY) && (this.state.nameUser === game.nameUser1) ) {
+    if ( (game.statusGame === STATUS_GAME_PLAY) &&
+         (this.state.nameUser === game.nameUser1) ) {
       game.statusUser2 = STATUS_USER_WINNER;
       game.statusGame  = STATUS_GAME_OVER;
       GamesService.saveGames(this.state.games);
       clearInterval(this.timerId);
     }
     else {
-      if ( (game.statusGame === STATUS_GAME_PLAY) && (this.state.nameUser === game.nameUser2) ) {
+      if ( (game.statusGame === STATUS_GAME_PLAY) &&
+           (this.state.nameUser === game.nameUser2) ) {
         game.statusUser1 = STATUS_USER_WINNER;
         game.statusGame  = STATUS_GAME_OVER;
         GamesService.saveGames(this.state.games);
@@ -208,33 +211,58 @@ class ActiveGame extends React.Component {
           {chooseGame.map(game => (
             <div key={(game.id)}>
               <label id="ActiveGame-container-nameUser">
-                <p className={DrawGame.cssNamePlayer(1, game.statusUser1, this.state.nameUser, game)}> {game.nameUser1} <img src={CrossImg} width="15" height="15" /> </p>
-                <p className={DrawGame.cssNamePlayer(2, game.statusUser2, this.state.nameUser, game)}> <img src={DrawGame.namePlayer(game, this.state.nameUser)} width="15" height="15" /> {game.nameUser2} </p>
+                <p className={DrawGame.cssNamePlayer(1, game.statusUser1,
+                  this.state.nameUser, game)}> {game.nameUser1}
+                  <img src={CrossImg} width="15" height="15" />
+                </p>
+                <p className={DrawGame.cssNamePlayer(2, game.statusUser2,
+                  this.state.nameUser, game)}>
+                  <img src={DrawGame.namePlayer(game, this.state.nameUser)}
+                  width="15" height="15" /> {game.nameUser2}
+                </p>
               </label>
 
               <div>
                 <div id="ActiveGame-fields-container">
-                  <div className={DrawGame.paintCell(game.fieldsGame[0][0], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 0, 0)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[0][0],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 0, 0)}>
                   </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[0][1], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 0, 1)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[0][1],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 0, 1)}>
                   </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[0][2], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 0, 2)}>
-                  </div>
-                </div>
-                <div id="ActiveGame-fields-container">
-                  <div className={DrawGame.paintCell(game.fieldsGame[1][0], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 1, 0)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[1][1], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 1, 1)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[1][2], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 1, 2)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[0][2],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 0, 2)}>
                   </div>
                 </div>
                 <div id="ActiveGame-fields-container">
-                  <div className={DrawGame.paintCell(game.fieldsGame[2][0], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 2, 0)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[1][0],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 1, 0)}>
                   </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[2][1], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 2, 1)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[1][1],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 1, 1)}>
                   </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[2][2], game, this.state.nameUser)} onClick={this.setCell.bind(this, game, 2, 2)}>
+                  <div className={DrawGame.paintCell(game.fieldsGame[1][2],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 1, 2)}>
+                  </div>
+                </div>
+                <div id="ActiveGame-fields-container">
+                  <div className={DrawGame.paintCell(game.fieldsGame[2][0],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 2, 0)}>
+                  </div>
+                  <div className={DrawGame.paintCell(game.fieldsGame[2][1],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 2, 1)}>
+                  </div>
+                  <div className={DrawGame.paintCell(game.fieldsGame[2][2],
+                                  game, this.state.nameUser)}
+                       onClick={this.setCell.bind(this, game, 2, 2)}>
                   </div>
                 </div>
               </div>
@@ -244,13 +272,19 @@ class ActiveGame extends React.Component {
               </div>
 
               {(game.statusGame === STATUS_GAME_PLAY) && (
-                <button className="ActiveGame-button" onClick={this.setRedirect.bind(this, game)}> SURRENDER </button>
+                <button className="ActiveGame-button"
+                        onClick={this.setRedirect.bind(this, game)}>
+                  SURRENDER
+                </button>
               )}
 
               {((game.statusGame === STATUS_GAME_CREATE) ||
                 (game.statusGame === STATUS_GAME_START)  ||
                 (game.statusGame === STATUS_GAME_OVER))  && (
-                <button className="ActiveGame-button" onClick={this.setRedirect.bind(this, game)}> BACK </button>
+                <button className="ActiveGame-button"
+                        onClick={this.setRedirect.bind(this, game)}>
+                  BACK
+                </button>
               )}
 
             </div>

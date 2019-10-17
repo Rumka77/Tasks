@@ -46,9 +46,9 @@ class Main extends React.Component{
     }
   }
 
-  namePlayer(numUser, statusUser) {
-    if ( ((numUser === 1) && (statusUser === STATUS_USER_WINNER)) ||
-         ((numUser === 2) && (statusUser === STATUS_USER_WINNER)) ) {
+  namePlayer(numberUser, statusUser) {
+    if ( ((numberUser === 1) && (statusUser === STATUS_USER_WINNER)) ||
+         ((numberUser === 2) && (statusUser === STATUS_USER_WINNER)) ) {
 
       return "Main-container-winnerUser";
     }
@@ -87,9 +87,11 @@ class Main extends React.Component{
   deleteOldGames(games) {
     let changed = false;
     for (let i = 0; i < games.length; i++) {
-      if ( (DataService.dateNowToStr() !== DataService.idToDateStr(games[i].id)) ||
+      if ( (DataService.dateNowToStr() !==
+            DataService.idToDateStr(games[i].id)) ||
            ((games[i].statusGame === STATUS_GAME_CREATE) &&
-            (DataService.timeNowSec() - DataService.idToTimeSec(games[i].id) > 900)) ) {
+            (DataService.timeNowSec() -
+             DataService.idToTimeSec(games[i].id) > 900)) ) {
 
         if (!changed) {
           changed = true;
@@ -130,7 +132,8 @@ class Main extends React.Component{
 
     const {redirect} = this.state;
     if (redirect && this.nameUser.value) {
-      return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" + activeGame.id+ "/" + activeGame.statusGame} />;
+      return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" +
+              activeGame.id+ "/" + activeGame.statusGame} />;
     }
 
     return (
@@ -139,33 +142,50 @@ class Main extends React.Component{
 
         <form className="Main-listGames" id="Main-container">
           <div className="Main-div-input_text">
-            <input type="text" className="Main-input_text" name="nameUser" ref={el=>this.nameUser=el} />
+            <input type="text" className="Main-input_text" name="nameUser"
+                   ref={el=>this.nameUser=el}
+            />
           </div>
           <div id="Main-games-container">
             {games.map(game => (
-              <div key={(game.id)} className={(game.statusGame)} onClick={this.setRedirect.bind(this, game)}>
+              <div key={(game.id)} className={(game.statusGame)}
+                   onClick={this.setRedirect.bind(this, game)}>
                 <div id="Main-user1">
                   <div>
-                    <p className={this.namePlayer(1, game.statusUser1)}> {game.nameUser1 } </p>
+                    <p className={this.namePlayer(1, game.statusUser1)}>
+                       {game.nameUser1 }
+                    </p>
                   </div>
                   <div>
-                    <p className="Main-container-winnerUser"> {this.drawMark(game.statusUser1)} </p>
+                    <p className="Main-container-winnerUser">
+                       {this.drawMark(game.statusUser1)}
+                    </p>
                   </div>
                 </div>
 
                 <div id="Main-user2">
                   <div>
-                    <p className={this.namePlayer(2, game.statusUser2)}> {game.nameUser2} </p>
+                    <p className={this.namePlayer(2, game.statusUser2)}>
+                      {game.nameUser2}
+                    </p>
                   </div>
                   <div>
-                    <p className="Main-container-winnerUser"> {this.drawMark(game.statusUser2)} </p>
+                    <p className="Main-container-winnerUser">
+                      {this.drawMark(game.statusUser2)}
+                    </p>
                   </div>
                 </div>
 
                 <div id="Main-timer-game">
-                  <span>{DataService.dateFormatted(Math.round(game.timer/60/60))} : </span>
-                  <span>{DataService.dateFormatted(Math.round(game.timer/60))} : </span>
-                  <span>{DataService.dateFormatted(game.timer%60)} </span>
+                  <span>
+                    {DataService.dateFormatted(Math.round(game.timer/60/60))}:
+                  </span>
+                  <span>
+                    {DataService.dateFormatted(Math.round(game.timer/60))}:
+                  </span>
+                  <span>
+                    {DataService.dateFormatted(game.timer%60)}
+                  </span>
                 </div>
               </div>
             ))}
@@ -173,7 +193,9 @@ class Main extends React.Component{
         </form>
 
         <div className="Main-div-button">
-          <button className="Main-button" onClick={this.addNewGame.bind(this)}> + </button>
+          <button className="Main-button" onClick={this.addNewGame.bind(this)}>
+            +
+          </button>
         </div>
       </div>
     );

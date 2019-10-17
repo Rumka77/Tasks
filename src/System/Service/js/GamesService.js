@@ -8,8 +8,8 @@ class GamesService {
     localStorage.setItem("games", JSON.stringify(games));
   }
 
-  static deleteItems(mass, index, delCount) {
-    mass.splice(index, delCount);
+  static deleteItems(array, index, deleteCount) {
+    array.splice(index, deleteCount);
   }
 
 }

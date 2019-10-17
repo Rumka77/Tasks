@@ -41,18 +41,19 @@ class DrawGame {
     return result;
   }
 
-  static cssNamePlayer(numUser, statusUser, nameUser, game) {
+  static cssNamePlayer(numberUser, statusUser, nameUser, game) {
     let result = "";
-    if ( (numUser === 1) && (statusUser === STATUS_USER_WAITING) ) {
+    if ( (numberUser === 1) && (statusUser === STATUS_USER_WAITING) ) {
       result = "ActiveGame-container-nameUser1 ActiveGame-container-activeUser";
     }
     else {
-      if (numUser === 1) {
+      if (numberUser === 1) {
         result = result + "ActiveGame-container-nameUser1";
       }
       else {
         if (statusUser === STATUS_USER_WAITING) {
-          result = result + "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
+          result = result +
+            "ActiveGame-container-nameUser2 ActiveGame-container-activeUser";
         }
         else {
           result = result + "ActiveGame-container-nameUser2";
