@@ -196,6 +196,11 @@ class ActiveGame extends React.Component {
       chooseGame = {};
     };
 
+    let numberLine = [];
+    for (let i = 0; i < SIZE_BOARD; i++) {
+      numberLine.push(i);
+    }
+
     const {redirect} = this.state;
     if (redirect) {
       return <Redirect to="/" />;
@@ -224,46 +229,23 @@ class ActiveGame extends React.Component {
 
               <div>
                 <div id="ActiveGame-fields-container">
-                  <div className={DrawGame.paintCell(game.fieldsGame[0][0],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 0, 0)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[0][1],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 0, 1)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[0][2],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 0, 2)}>
-                  </div>
-                </div>
-                <div id="ActiveGame-fields-container">
-                  <div className={DrawGame.paintCell(game.fieldsGame[1][0],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 1, 0)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[1][1],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 1, 1)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[1][2],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 1, 2)}>
-                  </div>
-                </div>
-                <div id="ActiveGame-fields-container">
-                  <div className={DrawGame.paintCell(game.fieldsGame[2][0],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 2, 0)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[2][1],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 2, 1)}>
-                  </div>
-                  <div className={DrawGame.paintCell(game.fieldsGame[2][2],
-                                  game, this.state.nameUser)}
-                       onClick={this.setCell.bind(this, game, 2, 2)}>
-                  </div>
+                  {numberLine.map(line => (
+                    <div key={(line)}>
+                      {numberLine.map(column => (
+                        <div key={(column)}
+                             className={DrawGame.cssCell(
+                               game.fieldsGame[Math.floor(
+                                 (SIZE_BOARD*line+column)/SIZE_BOARD)][
+                                 (SIZE_BOARD*line+column)%SIZE_BOARD],
+                               game, this.state.nameUser)}
+                             onClick={this.setCell.bind(
+                               this, game, Math.floor(
+                                 (SIZE_BOARD*line+column)/SIZE_BOARD),
+                                 (SIZE_BOARD*line+column)%SIZE_BOARD)}>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -296,6 +278,8 @@ class ActiveGame extends React.Component {
 }
 
 export default ActiveGame;
+
+const SIZE_BOARD          = 3;
 
 const STATUS_USER_DEFAULT = 0;
 const STATUS_USER_WAITING = 1;

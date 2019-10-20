@@ -14,27 +14,31 @@ class DrawGame {
     }
   }
 
-  static paintCell(field, game, nameUser) {
+  static cssCell(field, game, nameUser, numberLine, numberColumn) {
     let result = "";
+    if ((numberLine > 0) && (numberColumn === 0)) {
+      result = result + "ActiveGame-newLine ";
+      console.dir(result);
+    }
     if (this.viewMode(game, nameUser)) {
-      result = result + "ActiveGame-field-view";
+      result = result + "ActiveGame-field-view ";
       if (field === CROSS_IN_FIELD) {
-        result = result + " ActiveGame-cross-field";
+        result = result + "ActiveGame-cross-field ";
       }
       else {
         if (field === ZERO_IN_FIELD) {
-          result = result + " ActiveGame-zero-view-field";
+          result = result + "ActiveGame-zero-view-field ";
         }
       }
     }
     else {
-      result = result + "ActiveGame-field";
+      result = result + "ActiveGame-field ";
       if (field === CROSS_IN_FIELD) {
-        result = result + " ActiveGame-cross-field";
+        result = result + "ActiveGame-cross-field ";
       }
       else {
         if (field === ZERO_IN_FIELD) {
-          result = result + " ActiveGame-zero-field";
+          result = result + "ActiveGame-zero-field ";
         }
       }
     }

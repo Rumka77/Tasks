@@ -18,6 +18,10 @@
   width      : 90%;
 }
 
+.ActiveGame-newLine{
+  clear : both;
+}
+
 #ActiveGame-container {
   display         : flex;
   flex-direction  : column;
