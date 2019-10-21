@@ -15,7 +15,7 @@ class Main extends React.Component{
       activeGame : {},
     }
     if (!this.state.games) {
-      this.state.games = [];
+      this.state.games = {};
     }
   }
 
@@ -119,21 +119,28 @@ class Main extends React.Component{
   }
 
   render() {
-    this.deleteOldGames(this.state.games);
-    let games = this.state.games;
+    let games      = this.state.games;
+    let activeGame = {};
     if (!games) {
-      games = [];
+      games = {};
+      GamesService.initGames();
+    }
+    else {
+      this.deleteOldGames(this.state.games);
     }
 
-    let activeGame = games.find(game => game.id === this.state.active);
-    if (!activeGame) {
-      activeGame = {};
-    }
-
-    const {redirect} = this.state;
-    if (redirect && this.nameUser.value) {
-      return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" +
-              activeGame.id+ "/" + activeGame.statusGame} />;
+    if (this.state.active) {
+      activeGame = games.find(game => game.id === this.state.active);
+      if (!activeGame) {
+        activeGame = {};
+      }
+      else {
+        const {redirect} = this.state;
+        if (redirect && this.nameUser.value) {
+          return <Redirect to={"/ActiveGame/js/" + this.nameUser.value + "/" +
+                  activeGame.id+ "/" + activeGame.statusGame} />;
+        }
+      }
     }
 
     return (
@@ -146,50 +153,53 @@ class Main extends React.Component{
                    ref={el=>this.nameUser=el}
             />
           </div>
-          <div id="Main-games-container">
-            {games.map(game => (
-              <div key={(game.id)} className={(game.statusGame)}
-                   onClick={this.setRedirect.bind(this, game)}>
-                <div id="Main-user1">
-                  <div>
-                    <p className={this.namePlayer(1, game.statusUser1)}>
-                       {game.nameUser1 }
-                    </p>
-                  </div>
-                  <div>
-                    <p className="Main-container-winnerUser">
-                       {this.drawMark(game.statusUser1)}
-                    </p>
-                  </div>
-                </div>
 
-                <div id="Main-user2">
-                  <div>
-                    <p className={this.namePlayer(2, game.statusUser2)}>
-                      {game.nameUser2}
-                    </p>
+          {(games.length > 0) && (
+            <div id="Main-games-container">
+              {(games.map(game => (
+                <div key={(game.id)} className={(game.statusGame)}
+                     onClick={this.setRedirect.bind(this, game)}>
+                  <div id="Main-user1">
+                    <div>
+                      <p className={this.namePlayer(1, game.statusUser1)}>
+                        {game.nameUser1 }
+                      </p>
+                    </div>
+                    <div>
+                      <p className="Main-container-winnerUser">
+                        {this.drawMark(game.statusUser1)}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="Main-container-winnerUser">
-                      {this.drawMark(game.statusUser2)}
-                    </p>
-                  </div>
-                </div>
 
-                <div id="Main-timer-game">
-                  <span>
-                    {DataService.dateFormatted(Math.round(game.timer/60/60))}:
-                  </span>
-                  <span>
-                    {DataService.dateFormatted(Math.round(game.timer/60))}:
-                  </span>
-                  <span>
-                    {DataService.dateFormatted(game.timer%60)}
-                  </span>
+                  <div id="Main-user2">
+                    <div>
+                      <p className={this.namePlayer(2, game.statusUser2)}>
+                        {game.nameUser2}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="Main-container-winnerUser">
+                        {this.drawMark(game.statusUser2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div id="Main-timer-game">
+                    <span>
+                      {DataService.dateFormatted(Math.round(game.timer/60/60))}:
+                    </span>
+                    <span>
+                      {DataService.dateFormatted(Math.round(game.timer/60))}:
+                    </span>
+                    <span>
+                      {DataService.dateFormatted(game.timer%60)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              )))}
+            </div>
+          )}
         </form>
 
         <div className="Main-div-button">

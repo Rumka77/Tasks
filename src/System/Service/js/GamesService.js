@@ -1,5 +1,9 @@
 class GamesService {
 
+  static initGames() {
+    localStorage.setItem("games", JSON.stringify(gamesArray));
+  }
+
   static getGames() {
     return JSON.parse(localStorage.getItem("games"));
   }
@@ -14,3 +18,5 @@ class GamesService {
 
 }
 export default GamesService;
+
+const gamesArray = [];
