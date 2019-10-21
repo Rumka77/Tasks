@@ -218,12 +218,12 @@ class ActiveGame extends React.Component {
               <label id="ActiveGame-container-nameUser">
                 <p className={DrawGame.cssNamePlayer(1, game.statusUser1,
                   this.state.nameUser, game)}> {game.nameUser1}
-                  <img src={CrossImg} width="15" height="15" />
+                  <img src={CrossImg} alt="Cross" width="15" height="15" />
                 </p>
                 <p className={DrawGame.cssNamePlayer(2, game.statusUser2,
                   this.state.nameUser, game)}>
                   <img src={DrawGame.namePlayer(game, this.state.nameUser)}
-                  width="15" height="15" /> {game.nameUser2}
+                    alt="Toe" width="15" height="15" /> {game.nameUser2}
                 </p>
               </label>
 
